@@ -23,7 +23,7 @@ def artist_list(request) :
             serializer.save()
             return Response(serializer.data,status=status.HTTP_201_CREATED)
 
-@api_view(['GET','DELETE'])
+@api_view(['GET','DELETE','PUT'])
 def artist_detail(request,artist_pk) :
     artist = get_object_or_404(Artist,pk=artist_pk)
     if request.method == 'GET' :
@@ -36,3 +36,8 @@ def artist_detail(request,artist_pk) :
             'delete' : f'데이터 {artist_pk} 삭제 완료'
         }
         return Response(data,status=status.HTTP_204_NO_CONTENT)
+    elif request.method =='PUT' :
+        serializer = ArtistSerializer(artist,data=request.data)
+        if serializer.is_valid(raise_exception=True) :
+            serializer.save()
+            return Response(serializer.data)
