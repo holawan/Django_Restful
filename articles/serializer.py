@@ -9,7 +9,7 @@ class ArticleListSerializer(serializers.ModelSerializer) :
         fields = ('id','title')
 
 class ArticleSerializer(serializers.ModelSerializer) :
-
+    comment_set = serializers.PrimaryKeyRelatedField(many=True,read_only = True)
     class Meta:
         model = Article
         fields = '__all__'
