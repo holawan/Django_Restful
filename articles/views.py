@@ -63,11 +63,25 @@ def comment_list(request) :
     serializer = CommentSerializer(comments,many=True)
     return Response(serializer.data)
 
-@api_view(['GET'])
+@api_view(['GET','PUT','DELETE'])
 def comment_detail(request, comment_pk) :
     comment = get_object_or_404(Comment, pk=comment_pk)
-    serializer = CommentSerializer(comment)
-    return Response(serializer.data)
+    if request.method=='GET' : 
+        serializer = CommentSerializer(comment)
+        return Response(serializer.data)
+    elif request.method=='DELETE' :
+        comment.delete()
+        data = {
+            #pk는 url에서 가져온 article_pk이다. 
+            'delete' : f'데이터 {comment_pk}번이 삭제 되었습니다.'
+        }
+        return Response(data, status=status.HTTP_204_NO_CONTENT)
+    
+    elif request.method=='PUT' :
+        serializer = CommentSerializer(comment,data=request.data) 
+        if serializer.is_valid(raise_exception=True) :
+            serializer.save()
+            return Response(serializer.data)
 
 @api_view(['POST'])
 def comment_create(request,article_pk) :
@@ -77,3 +91,4 @@ def comment_create(request,article_pk) :
         #직렬화 과정에서 article을 명시해줌 
         serializer.save(article=article)
         return Response(serializer.data,status=status.HTTP_201_CREATED)
+    
