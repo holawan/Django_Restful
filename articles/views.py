@@ -33,9 +33,24 @@ def article_list(request) :
         # #유효성 검사 통과 못하면 BAD REQUEST
         # return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET'])
+@api_view(['GET','DELETE','PUT'])
 def article_detail(request, article_pk) :
     article = get_object_or_404(Article,pk=article_pk)
-    serializer = ArticleSerializer(article)
+    if request.method=='GET' :
+        serializer = ArticleSerializer(article)
 
-    return Response(serializer.data)
+        return Response(serializer.data)
+    elif request.method=='DELETE' :
+        article.delete()
+        #response에는 넘겨줄 값이 필요한데, 삭제는 이가 없으므로 직접 만들어줌
+        data = {
+            #pk는 url에서 가져온 article_pk이다. 
+            'delete' : f'데이터 {article_pk}번이 삭제 되었습니다.'
+        }
+        return Response(data, status=status.HTTP_204_NO_CONTENT)
+    
+    elif request.method=='PUT' :
+        serializer = ArticleSerializer(article,data=request.data) 
+        if serializer.is_valid(raise_exception=True) :
+            serializer.save()
+            return Response(serializer.data)
