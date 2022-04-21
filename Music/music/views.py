@@ -26,8 +26,9 @@ def artist_list(request) :
 @api_view(['GET','DELETE','PUT'])
 def artist_detail(request,artist_pk) :
     artist = get_object_or_404(Artist,pk=artist_pk)
+
     if request.method == 'GET' :
-        serializer = ArtistListSerializer(artist)
+        serializer = ArtistSerializer(artist)
         return Response(serializer.data)
     
     elif request.method == 'DELETE' :
@@ -57,7 +58,7 @@ def music_create(request,artist_pk) :
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 @api_view(['GET','DELETE','PUT'])
-def music_detial(request,music_pk) :
+def music_detail(request,music_pk) :
     music = get_object_or_404(Music,pk=music_pk)
     if request.method == 'GET' :
         serializer = MusicSerializer(music)
