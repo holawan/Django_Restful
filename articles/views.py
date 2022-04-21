@@ -26,11 +26,12 @@ def article_list(request) :
         #첫번째 인자가 instance이기 때문에 data를 명시 
         serializer = ArticleSerializer(data=request.data)
         #유효성검사 통과하면 201 CREATED status 반환 
-        if serializer.is_valid() :
+        #raise_exeption을 통해 else구문을 사용하지 않아도 유효성 검사를 통과하지 못하면, 400 에러 리턴 
+        if serializer.is_valid(raise_exception=True) :
             serializer.save()
             return Response(serializer.data,status=status.HTTP_201_CREATED)
-        #유효성 검사 통과 못하면 BAD REQUEST
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        # #유효성 검사 통과 못하면 BAD REQUEST
+        # return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def article_detail(request, article_pk) :
