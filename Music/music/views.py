@@ -23,9 +23,16 @@ def artist_list(request) :
             serializer.save()
             return Response(serializer.data,status=status.HTTP_201_CREATED)
 
-@api_view(['GET'])
+@api_view(['GET','DELETE'])
 def artist_detail(request,artist_pk) :
     artist = get_object_or_404(Artist,pk=artist_pk)
     if request.method == 'GET' :
         serializer = ArtistListSerializer(artist)
         return Response(serializer.data)
+    
+    elif request.method == 'DELETE' :
+        artist.delete()
+        data = {
+            'delete' : f'데이터 {artist_pk} 삭제 완료'
+        }
+        return Response(data,status=status.HTTP_204_NO_CONTENT)
