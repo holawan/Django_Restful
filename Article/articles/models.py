@@ -14,5 +14,5 @@ class Comment(models.Model) :
     updated_at = models.DateTimeField(auto_now=True)
 
 class Card(models.Model) :
-    articles = models.ManyToManyField(Article, realated_name='cards')
+    articles = models.ManyToManyField(Article, related_name='cards')
     name = models.CharField(max_length=100)
