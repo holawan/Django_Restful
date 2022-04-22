@@ -94,10 +94,39 @@ def comment_create(request,article_pk) :
         return Response(serializer.data,status=status.HTTP_201_CREATED)
     
 @api_view(['GET'])
-
 def card_list(request) :
 
     cards = get_list_or_404(Card)
     serializer = CardSerializer(cards,many=True)
 
     return Response(serializer.data)
+
+@api_view(['GET','DELETE','PUT'])
+def card_detail(request,card_pk) :
+    card = get_object_or_404(Card, pk = card_pk)
+
+    if request.method=='GET' :
+        serializer = CardSerializer(card)
+        Response(serializer.data)
+    
+    elif request.method =='DELETE' :
+        pass
+    elif request.method =='PUT' :
+        pass
+
+
+
+@api_view(['POST'])
+def register(request,card_pk,article_pk):
+
+    card = get_object_or_404(Card,pk=card_pk)
+    article = get_object_or_404(Article,pk=article_pk)
+
+    if card.articles.filter(pk=article_pk).exist() :
+        card.articles.remove()
+    
+    else :
+        card.articles.add(article)
+    
+    serialiizer = CardSerializer(card)
+    return Response(serialiizer.data)
