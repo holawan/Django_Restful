@@ -1,7 +1,21 @@
 from django.urls import path
 from . import views
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 
 
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Snippets API",
+      default_version='v1',
+      description="Test description",
+      terms_of_service="https://www.google.com/policies/terms/",
+      contact=openapi.Contact(email="contact@snippets.local"),
+      license=openapi.License(name="BSD License"),
+   ),
+   public=True,
+)
 urlpatterns = [
     path('articles/', views.article_list),
     path('articles/<int:article_pk>/', views.article_detail),
@@ -11,4 +25,5 @@ urlpatterns = [
     path('cards/',views.card_list),
     path('cards/<int:card_pk>/' ,views.card_detail),
     path('<int:card_pk>/register/<int:article_pk>/', views.register),
+    path('swegger/', schema_view.with_ui('swagger')),
 ]

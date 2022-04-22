@@ -122,8 +122,8 @@ def register(request,card_pk,article_pk):
     card = get_object_or_404(Card,pk=card_pk)
     article = get_object_or_404(Article,pk=article_pk)
 
-    if card.articles.filter(pk=article_pk).exist() :
-        card.articles.remove()
+    if card.articles.filter(pk=article_pk).exists() :
+        card.articles.remove(article)
     
     else :
         card.articles.add(article)
