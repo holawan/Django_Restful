@@ -12,3 +12,7 @@ class Comment(models.Model) :
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Card(models.Model) :
+    articles = models.ManyToManyField(Article, realated_name='cards')
+    name = models.CharField(max_length=100)
