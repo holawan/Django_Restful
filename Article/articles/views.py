@@ -1,13 +1,14 @@
 from django.http import HttpResponse
 from django.shortcuts import get_list_or_404, get_object_or_404, render
-from .models import Article,Comment
-from .serializer import ArticleListSerializer, ArticleSerializer, CommentSerializer
+from .models import Article,Comment,Card
 # Create your views here.
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
+from .serializer.article import ArticleListSerializer,ArticleSerializer
+from .serializer.comment import CommentSerializer
+from .serializer.card import  CardSerializer
 
-from articles import serializer
 # @api_view()
 #api_view내부에 아무것도 없으면 GET만 허용 
 @api_view(['GET','POST'])
@@ -92,3 +93,11 @@ def comment_create(request,article_pk) :
         serializer.save(article=article)
         return Response(serializer.data,status=status.HTTP_201_CREATED)
     
+@api_view(['GET'])
+
+def card_list(request) :
+
+    cards = get_list_or_404(Card)
+    serializer = CardSerializer(cards,many=True)
+
+    return Response(serializer.data)
