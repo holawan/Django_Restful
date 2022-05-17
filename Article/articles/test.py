@@ -1,3 +1,27 @@
+
+from rest_framework import serializers
+
+from articles.serializer.card import CardSerializer
+from ..models import Article
+from .comment import CommentSerializer
+
+
+class ArticleSerializer(serializers.ModelSerializer) :
+    comment_set = serializers.PrimaryKeyRelatedField(many=True,read_only = True)
+    #article.comment_set.count()를 가져오고 싶기 때문에 article이하를 source에 넣어줌 
+    comment_count = serializers.IntegerField(source='comment_set.count', read_only=True)
+    cards = CardSerializer(many=True,read_only=True)
+    class Meta:
+        model = Article
+        fields = '__all__'
+
+class ArticleListSerializer(serializers.ModelSerializer) :
+
+    class Meta:
+        model = Article
+        fields = ('id','title')
+
+
 from django.http import HttpResponse
 from django.shortcuts import get_list_or_404, get_object_or_404, render
 from .models import Article,Comment,Card
@@ -130,3 +154,24 @@ def register(request,card_pk,article_pk):
     
     serialiizer = CardSerializer(card)
     return Response(serialiizer.data)
+
+    
+
+from django.db import models
+
+# Create your models here.
+class Article(models.Model):
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Comment(models.Model) : 
+    article = models.ForeignKey(Article,on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Card(models.Model) :
+    articles = models.ManyToManyField(Article, related_name='cards')
+    name = models.CharField(max_length=100)
