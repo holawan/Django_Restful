@@ -37,7 +37,10 @@ INSTALLED_APPS = [
     'django_extensions',
     'rest_framework',
     'corsheaders',
-    
+    'rest_framework.authtoken', #token 기반 auth
+
+    #DRF auth
+    'dj_rest_auth', #signup 제외 auth 담당
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
